@@ -42,7 +42,7 @@ ssr_forbid=""
 
 check_sys
 Get_IP
-Del_iptables ${ssr_port}
+#Del_iptables ${ssr_port}
 Add_iptables
 Save_iptables
 
