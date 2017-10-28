@@ -321,8 +321,8 @@ Del_port_user(){
 	# List_port_user
 	# while true
 	# do
-		echo -e "请输入要删除的用户 端口"
-		stty erase '^H' && read -p "(默认: 取消):" del_user_port
+#		echo -e "请输入要删除的用户 端口"
+#		stty erase '^H' && read -p "(默认: 取消):" del_user_port
 
 		if [ $# -eq 0 ]; then
 		# 如果有端口参数，就查询该用户
