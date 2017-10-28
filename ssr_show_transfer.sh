@@ -8,5 +8,5 @@ port=$1
 
 
 
-#List_port_user "${port}"
-List_port_user
+List_port_user "${port}"
+#List_port_user

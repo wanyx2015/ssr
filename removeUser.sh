@@ -1,6 +1,6 @@
 #!/bin/sh
 #set -x
-. ./libs.sh
+. ${PWD}/./libs.sh
 
 port=$1
 

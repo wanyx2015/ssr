@@ -333,7 +333,6 @@ Del_port_user(){
 		fi
 
 	
-		[[ -z "${del_user_port}" ]] && echo -e "已取消..." && exit 1
 		del_user=$(cat "${config_user_mudb_file}"|grep '"port": '"${del_user_port}"',')
 		if [[ ! -z ${del_user} ]]; then
 			port=${del_user_port}
@@ -341,11 +340,11 @@ Del_port_user(){
 			if [[ -z "${match_del}" ]]; then
 				echo -e "${Error} 用户删除失败 ${Green_font_prefix}[端口: ${del_user_port}]${Font_color_suffix} "
 			else
-				Del_iptables
+				Del_iptables ${del_user_port}
 				Save_iptables
 				echo -e "${Info} 用户删除成功 ${Green_font_prefix}[端口: ${del_user_port}]${Font_color_suffix} "
 			fi
-			break
+		#	break
 		else
 			echo -e "${Error} 请输入正确的端口 !"
 		fi
