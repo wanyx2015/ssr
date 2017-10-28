@@ -295,7 +295,11 @@ ssr_link_qr(){
 
 
 List_port_user(){
+if [ $# -eq 0 ]; then
 	user_info=$(python mujson_mgr.py -l)
+else
+	user_info=$(python mujson_mgr.py -l | grep $1)
+fi
 	user_total=$(echo "${user_info}"|wc -l)
 	[[ -z ${user_info} ]] && echo -e "${Error} 没有发现 用户，请检查 !" && exit 1
 	user_list_all=""
