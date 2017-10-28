@@ -315,3 +315,40 @@ List_port_user(){
 	echo && echo -e "=== 用户总数 ${Green_background_prefix} "${user_total}" ${Font_color_suffix}"
 	echo -e ${user_list_all}
 }
+
+
+Del_port_user(){
+	# List_port_user
+	# while true
+	# do
+		echo -e "请输入要删除的用户 端口"
+		stty erase '^H' && read -p "(默认: 取消):" del_user_port
+
+		if [ $# -eq 0 ]; then
+		# 如果有端口参数，就查询该用户
+			del_user_port=
+		else
+		# 否则就返回所有用户
+			del_user_port=$1
+		fi
+
+	
+		[[ -z "${del_user_port}" ]] && echo -e "已取消..." && exit 1
+		del_user=$(cat "${config_user_mudb_file}"|grep '"port": '"${del_user_port}"',')
+		if [[ ! -z ${del_user} ]]; then
+			port=${del_user_port}
+			match_del=$(python mujson_mgr.py -d -p "${del_user_port}"|grep -w "delete user ")
+			if [[ -z "${match_del}" ]]; then
+				echo -e "${Error} 用户删除失败 ${Green_font_prefix}[端口: ${del_user_port}]${Font_color_suffix} "
+			else
+				Del_iptables
+				Save_iptables
+				echo -e "${Info} 用户删除成功 ${Green_font_prefix}[端口: ${del_user_port}]${Font_color_suffix} "
+			fi
+			break
+		else
+			echo -e "${Error} 请输入正确的端口 !"
+		fi
+	# done
+}
+
