@@ -1,5 +1,28 @@
 #!/bin/sh
 
+Green_font_prefix="\033[32m" && Red_font_prefix="\033[31m" && Green_background_prefix="\033[42;37m" && Red_background_prefix="\033[41;37m" && Font_color_suffix="\033[0m"
+Info="${Green_font_prefix}[信息]${Font_color_suffix}"
+Error="${Red_font_prefix}[错误]${Font_color_suffix}"
+Tip="${Green_font_prefix}[注意]${Font_color_suffix}"
+
+sh_ver="1.0.16"
+filepath=$(cd "$(dirname "$0")"; pwd)
+file=$(echo -e "${filepath}"|awk -F "$0" '{print $1}')
+ssr_folder="/usr/local/shadowsocksr"
+config_file="${ssr_folder}/config.json"
+config_user_file="${ssr_folder}/user-config.json"
+config_user_api_file="${ssr_folder}/userapiconfig.py"
+config_user_mudb_file="${ssr_folder}/mudb.json"
+ssr_log_file="${ssr_folder}/ssserver.log"
+Libsodiumr_file="/usr/local/lib/libsodium.so"
+Libsodiumr_ver_backup="1.0.15"
+Server_Speeder_file="/serverspeeder/bin/serverSpeeder.sh"
+LotServer_file="/appex/bin/serverSpeeder.sh"
+BBR_file="${file}/bbr.sh"
+jq_file="${ssr_folder}/jq"
+
+cd "${ssr_folder}"
+
 check_sys(){
 	if [[ -f /etc/redhat-release ]]; then
 		release="centos"
@@ -268,4 +291,21 @@ ssr_link_qr(){
 	SSRurl="ssr://${SSRbase64}"
 	SSRQRcode="http://doub.pw/qr/qr.php?text=${SSRurl}"
 	ssr_link=" SSR   链接 : ${Red_font_prefix}${SSRurl}${Font_color_suffix} \n SSR 二维码 : ${Red_font_prefix}${SSRQRcode}${Font_color_suffix} \n "
+}
+
+
+List_port_user(){
+	user_info=$(python mujson_mgr.py -l)
+	user_total=$(echo "${user_info}"|wc -l)
+	[[ -z ${user_info} ]] && echo -e "${Error} 没有发现 用户，请检查 !" && exit 1
+	user_list_all=""
+	for((integer = 1; integer <= ${user_total}; integer++))
+	do
+		user_port=$(echo "${user_info}"|sed -n "${integer}p"|awk '{print $4}')
+		user_username=$(echo "${user_info}"|sed -n "${integer}p"|awk '{print $2}'|sed 's/\[//g;s/\]//g')
+		Get_User_transfer "${user_port}"
+		user_list_all=${user_list_all}"用户名: ${Green_font_prefix} "${user_username}"${Font_color_suffix}\t 端口: ${Green_font_prefix}"${user_port}"${Font_color_suffix}\t 流量使用情况(已用+剩余=总): ${Green_font_prefix}${transfer_enable_Used_2}${Font_color_suffix} + ${Green_font_prefix}${transfer_enable_Used}${Font_color_suffix} = ${Green_font_prefix}${transfer_enable}${Font_color_suffix}\n"
+	done
+	echo && echo -e "=== 用户总数 ${Green_background_prefix} "${user_total}" ${Font_color_suffix}"
+	echo -e ${user_list_all}
 }
