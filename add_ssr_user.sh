@@ -35,8 +35,8 @@ ssr_method="aes-256-cfb"
 ssr_protocol="auth_sha1_v4"
 ssr_obfs="tls1.2_ticket_auth"
 ssr_protocol_param=""
-ssr_speed_limit_per_con=500
-ssr_speed_limit_per_user=600
+ssr_speed_limit_per_con=0
+ssr_speed_limit_per_user=0
 ssr_transfer=50
 ssr_forbid=""
 
